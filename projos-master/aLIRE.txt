@@ -1,0 +1,14 @@
+# projos
+
+CE QUE J AI FAIS
+-Alors j'ai mis dans le tttt ce que je pense qu'on devrait faire en main (c'est en pseudo c)
+-Le Maintmp c'est l'ancien main que j'ai viré car pas efficace selon moi
+-J'ai corrigé toutes les erreurs de syntaxes(y en avait beaucoup) donc ça compile
+
+ CE QU'IL FAUT FAIRE
+
+-Vérifier que les différentes fonctions marchent correctement
+-Ecrire le main et la fonction jouer
+-Ecrire la fonction d'ecriture de fichier
+-Faire des printf avec de write pour ecrire les actions en cours (sorte de 
+printf)
