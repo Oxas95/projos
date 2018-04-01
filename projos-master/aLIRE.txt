@@ -8,7 +8,17 @@ CE QUE J AI FAIS
  CE QU'IL FAUT FAIRE
 
 -Vérifier que les différentes fonctions marchent correctement
--Ecrire le main et la fonction jouer
--Ecrire la fonction d'ecriture de fichier
+-Ecrire le main et la fonction jouer  --> on fais ça mardi matin
+-Ecrire la fonction d'ecriture de fichier   -> pour ecrire quoi ?
 -Faire des printf avec de write pour ecrire les actions en cours (sorte de 
-printf)
+printf)     ->   fini et a tester
+
+
+
+CHOSE FAITE PAR MATHIEU
+
+j'ai créé une enumeration pour le type de mise, ça evite de créer des constantes en macro et jouer sur les caracteres
+
+j'ai fais en sorte que on est un tableau fixe de joueur , et j'ai fais la fonction pour les initialiser
+
+j'ai créé la fonction "print" pour faire un printf mais on devra verifier que ça marche

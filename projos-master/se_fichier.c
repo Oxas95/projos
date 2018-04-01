@@ -86,6 +86,34 @@ int SE_lectureEntier (SE_FICHIER fichier, int * entier){
 	return cpt;
 }
 
+int SE_lectureEntier2(SE_FICHIER fichier, int * entier, char *c){
+	*entier = 0;
+	int iszero = 0;
+	int negatif = 0; // indique si l'on a lu le caractere '-' au debut
+	int encore = 1; //stoppe la boucle si on tombe sur un caractere ne constituant pas un entier
+	int cpt = 0; //compte le nombre d'octets lues
+	int ret = 1; //stocke le retour de lecture d'un caratere
+	while(ret == 1 && encore){
+		ret = SE_lectureCaractere (fichier, c);
+		if(ret == 1){
+			if(*c >= '0' && *c <= '9'){
+				if(*c == '0' && *entier == 0)	iszero = 1;
+				*entier *= 10;
+				*entier += (c - 48);
+			}
+			else if(*c == '-' && *entier == 0 && !iszero)	negatif = 1;
+			else if(*c == ' '){
+				if(*entier != 0 || (*entier == 0 && iszero))	encore = 0;
+				else if(negatif == 1)	negatif = 0;
+			}
+			else	encore = 0;
+			cpt++;
+		}
+	}
+	if(negatif) *entier = -*entier;
+	return cpt;
+}
+
 int SE_ecritureEntier (SE_FICHIER fichier, const int entier){
 	char s[32];
 	sprintf(s,"%d",entier);

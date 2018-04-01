@@ -2,11 +2,10 @@
 
 typedef struct {
 	int nbJoueur,nbDecks,nbMains;
-	Joueur* joueur;
 } Plateau;
 
 Plateau init_jeu();
 
-int lire_entier(int fd);
+void init_joueurs(Joueur j[], int taille_tab);
 
-void ecrire_fichier();
+void print(const char* string);

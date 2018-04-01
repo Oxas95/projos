@@ -3,10 +3,9 @@
 #include "deck.h"
 #include "banque.h"
 
-Banque jouerBanque(Banque banque)
-{
+Banque jouerBanque(Banque banque){
 	
 	
 	
 	return banque;
-	}
+}

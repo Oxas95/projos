@@ -8,39 +8,29 @@
 #include "banque.h"
 
 
-int main(int argc,char*argv[] )
-{	
-	Plateau jeu=init_jeu();	//initialise plateau de jeu
+int main(int argc,char*argv[] ){	
+	Plateau jeu = init_plateau();	//recupere les données du plateau
+	Joueur j[jeu.nbJoueur]; init_joueurs(j,jeu.nbJoueur);
 	pid_t bank_pid=getpid();
 	pid_t pid[4];
 	int pipefd[8][2];	
-	for(int a=0;a<4;a++)
-	{
-		if(pipe(pipefd[a])==-1) //crée les tubes
-		{
-
+	for(int a = 0; a < 4; a++){
+		if(pipe(pipefd[a]) == -1){ //crée les tubes
 			exit(3);
-			}
-		
 		}
+	}
 	
-	pid[0]=fork();
-	for(int i=1;i<4;i++)  //crée les processus
-	{
-		if(pid[i-1])
-		{
-			pid[i]=fork();
-			
-			}
-
+	pid[0] = fork();
+	for(int i = 1; i < 4; i++){  //crée les processus
+		if(pid[i-1]){
+			pid[i] = fork();
 		}
+	}
 	
-	if(getpid()==bank_pid) // si on est dans la banque, on crée un deck et on mélange
-	{
-	for(int i=0;i<jeu.nbJoueur;i++) //met en pause tous les processus
-	{
-		kill(pid[i],SIGSTOP);
-		
+	if(getpid() == bank_pid){ // si on est dans la banque, on crée un deck et on mélange
+	
+		for(int i = 0; i < jeu.nbJoueur; i++){ //met en pause tous les processus
+			kill(pid[i],SIGSTOP);
 		}
 	}
 	

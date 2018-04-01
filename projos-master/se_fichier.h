@@ -5,7 +5,7 @@
 
 // constantes d'ouverture de fichiers pour SE_ouverture
 #define READ O_RDONLY
-#define WRITE O_CREAT | O_WRONLY
+#define WRITE O_WRONLY
 #define ADD O_APPEND
 #define WR O_RDWR
 
@@ -71,6 +71,14 @@ int SE_ecritureChaine (SE_FICHIER fichier, const char * chaine, int taille);
 // Lecture d'un entier dans un fichier
 // \param	fichier			Structure FICHIER où lire
 // \param	entier			Entier lu
+// \return					-1 si échec, 0 si fin du fichier,
+//							nombre d'octets lus sinon
+int SE_lectureEntier (SE_FICHIER fichier, int * entier);
+
+// Lecture d'un entier dans un fichier
+// \param	fichier			Structure FICHIER où lire
+// \param	entier			Entier lu
+// \param	caractere		dernier caractere lu
 // \return					-1 si échec, 0 si fin du fichier,
 //							nombre d'octets lus sinon
 int SE_lectureEntier (SE_FICHIER fichier, int * entier);

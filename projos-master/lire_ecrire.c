@@ -2,14 +2,7 @@
 #include <stdlib.h>
 #include "lire_ecrire.h"
 #include "se_fichier.h"
-//a mettre dans lire ecire.h
-/*
-typedef struct {
-	int nbJoueur,nbDecks,nbMains;
-	Joueur* j;
-} Plateau;
-
-*/
+#include "lire_ecrire.h"
 
 char estChiffreOuSigne(char c){
 	if((c >= '0' && c <= '9') || c == '+' || c == '-') return 1;
@@ -21,53 +14,58 @@ char estChiffre(char c){
 	return 0;
 }
 
-Plateau init_jeu(){ //a remplacer avec se_fichier.h
+Plateau init_jeu(){
 	Plateau p;
 	SE_FICHIER f = SE_ouverture("param.lv21",READ);
-	int l = 0,i,j = 0;
-	char c = 0, chaine [30] = {0}; int ret;
+	if(f == -1) exit(1);
+	char c = 0, ret;
 	while(c != '\n' && (ret = SE_lectureCaractere(f,&c) > 0)) if(ret != 1) exit(1);
 	
 	if(SE_lectureEntier(f,&p.nbJoueur) < 1)exit(1);
 	if(SE_lectureEntier(f,&p.nbDecks) < 1)exit(1);
 	if(SE_lectureEntier(f,&p.nbMains) < 1)exit(1);
-	p.joueur = malloc(p.nbJoueur*sizeof(Joueur)); // j'ai enlevé un exit(1); ici
 	
-	for (i = 0; i < p.nbJoueur; i++){
-		if(SE_lectureEntier(f,&(p.joueur[i].nb_jeton)) < 1)exit(1);
-		c = 0; j = 0;
-		while(c != ';' && (ret = SE_lectureCaractere(f,&c)) > 1){
-			if(estChiffreOuSigne(c) && j < 30)chaine[j++] = c;
-		} if(ret < 1) exit(1);
-		j = 0;
-		while(estChiffre(chaine[j])){
-			l *= 10; l += atoi(chaine[j++]); 
-		}
-		if(chaine[j] != '+' && chaine[j] != '-')p.joueur[i].typeMise = CSTE;
-		else p.joueur[i].typeMise = chaine[j];
-		p.joueur[i].mise = l;
-		
-		if(SE_lectureEntier(f,&(p.joueur[i].valStop)) < 1)exit(1);
-		if(SE_lectureEntier(f,&(p.joueur[i].objJetons)) < 1)exit(1);
-	}
-	
+	SE_fermeture(f);
 	
 	return p;
 }
 
-int lire_entier(int fd)
-{
-	int entier=0;
-	return entier;
+void init_joueurs(Joueur j[], int taille_tab){
+	int i, j = 0, l = 0, ret;
+	char c = 0;
 	
-	}	
+	SE_FICHIER f = SE_ouverture("param.lv21",READ);
 	
-
-
-void ecrire_fichier()
-{
-	
-	
-	;
-	
+	for(i = 0; i < 2; i++){
+		while(c != '\n' && (ret = SE_lectureCaractere(f,&c) > 0)) if(ret != 1) exit(1);
 	}
+	
+	for (i = 0; i < taille_tab; i++){
+		if(SE_lectureEntier(f,&(j[i].nb_jeton)) < 1)exit(1);
+		
+		if(SE_lectureEntier2(f,&(j[i].mise),&c) < 1)exit(1);
+		switch(c){
+			case ';' : j.typeMise = CSTE;		break;
+			case '+' : j.typeMise = CROISSANT;	break;
+			case '-' : j.typeMise = DESCENDANT;	break;
+			default  : j.typeMise = CSTE;		break;
+		}
+		
+		if(SE_lectureEntier(f,&(j[i].valStop)) < 1)exit(1);
+		if(SE_lectureEntier(f,&(j[i].objJetons)) < 1)exit(1);
+	}
+	
+	SE_fermeture(f);
+}
+
+int taille_chaine(const char* string){
+	int cpt = 0;
+	while(string[cpt++] != '\0');
+	return cpt;
+}
+
+void print(const char* string){ //a tester
+	SE_FICHIER s = SE_ouverture(stdout,WRITE);
+	SE_ecritureChaine(s,string,taille_chaine(string));
+	SE_fermeture(s);
+}
