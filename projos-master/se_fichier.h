@@ -81,7 +81,7 @@ int SE_lectureEntier (SE_FICHIER fichier, int * entier);
 // \param	caractere		dernier caractere lu
 // \return					-1 si échec, 0 si fin du fichier,
 //							nombre d'octets lus sinon
-int SE_lectureEntier (SE_FICHIER fichier, int * entier);
+int SE_lectureEntier2(SE_FICHIER fichier, int * entier, char *c);
 
 // Ecriture d'un entier dans un fichier
 // \param	fichier			Structure FICHIER où écrire

@@ -5,14 +5,23 @@
 #include <unistd.h>
 
 typedef enum{
-	CSTE;
-	CROISSANT;
-	DESCENDANT;
+	CSTE,
+	CROISSANT,
+	DESCENDANT
 }Type_de_mise;
 
 typedef struct{
+	int tab[21]; // une main ne pourra pas excéder 21 cartes
+	int sommet;
+
+}Main;
+
+
+
+
+typedef struct{
 	pid_t pid;
-	int main[20];
+	Main main;
 	int nb_jeton;
 	int score;
 	int mise;
@@ -23,6 +32,7 @@ typedef struct{
 	int action; //PIOCHER ou RESTER 
 	int fluctuation; //0 si a perdu au dernier tour, 1 si a gagné
 }Joueur;
+
 
 Joueur jouer(Joueur j,int* pipefd);
 	

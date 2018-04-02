@@ -99,7 +99,7 @@ int SE_lectureEntier2(SE_FICHIER fichier, int * entier, char *c){
 			if(*c >= '0' && *c <= '9'){
 				if(*c == '0' && *entier == 0)	iszero = 1;
 				*entier *= 10;
-				*entier += (c - 48);
+				*entier += (atoi(c) - 48);
 			}
 			else if(*c == '-' && *entier == 0 && !iszero)	negatif = 1;
 			else if(*c == ' '){
@@ -117,7 +117,7 @@ int SE_lectureEntier2(SE_FICHIER fichier, int * entier, char *c){
 int SE_ecritureEntier (SE_FICHIER fichier, const int entier){
 	char s[32];
 	sprintf(s,"%d",entier);
-	int i = 0;
+	//int i = 0;
 	int ret = SE_ecritureChaine(fichier,s,strlen(s) + 1);
 	return ret;
 }

@@ -22,3 +22,14 @@ j'ai créé une enumeration pour le type de mise, ça evite de créer des consta
 j'ai fais en sorte que on est un tableau fixe de joueur , et j'ai fais la fonction pour les initialiser
 
 j'ai créé la fonction "print" pour faire un printf mais on devra verifier que ça marche
+
+
+Update 2 avril:
+
+Erreurs de syntaxes corrigées
+
+Main.c structuré(j'ai fait le système de pioche avec l'interaction banque-joueurs
+il reste plus que les mises )
+
+Fonction joueur faite 
+

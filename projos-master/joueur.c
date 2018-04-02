@@ -6,10 +6,15 @@
 
 Joueur jouer(Joueur j,int pipefd[]){
 	int buf;
-	read(pipefd[0],&buf,1);
 	if(j.score < j.valStop){
-			
+		j.action=PIOCHER;
 	}
+	
+	else{
+		j.action=RESTER;
+		
+		}
+	
 	return j;
 }
 

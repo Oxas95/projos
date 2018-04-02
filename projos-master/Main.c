@@ -6,22 +6,22 @@
 #include "deck.h"
 #include "lire_ecrire.h"
 #include "banque.h"
-
+// IL FAUT RAJOUTER action =PIOCHE à l'initialisation
 
 int main(int argc,char*argv[] ){	
-	Plateau jeu = init_plateau();	//recupere les données du plateau
+	Plateau jeu = init_jeu();	//recupere les données du plateau
 	Joueur j[jeu.nbJoueur]; init_joueurs(j,jeu.nbJoueur);
 	pid_t bank_pid=getpid();
-	pid_t pid[4];
-	int pipefd[8][2];	
-	for(int a = 0; a < 4; a++){
+	pid_t pid[jeu.nbJoueur];
+	int pipefd[jeu.nbJoueur*2][2];	
+	for(int a = 0; a < jeu.nbJoueur*2; a++){
 		if(pipe(pipefd[a]) == -1){ //crée les tubes
 			exit(3);
 		}
 	}
 	
 	pid[0] = fork();
-	for(int i = 1; i < 4; i++){  //crée les processus
+	for(int i = 1; i < jeu.nbJoueur; i++){  //crée les processus
 		if(pid[i-1]){
 			pid[i] = fork();
 		}
@@ -29,10 +29,68 @@ int main(int argc,char*argv[] ){
 	
 	if(getpid() == bank_pid){ // si on est dans la banque, on crée un deck et on mélange
 	
-		for(int i = 0; i < jeu.nbJoueur; i++){ //met en pause tous les processus
-			kill(pid[i],SIGSTOP);
+		initDeckLib();
+		deck_t* d;
+		d=initDeck(P52,jeu.nbDecks);
+		shuffleDeck(d);
+		int i,a,mainCourante=0;
+		int carte;
+		int actionJoueur;
+	while(mainCourante<jeu.nbMains)	
+		{
+		for(i=0;i<jeu.nbJoueur;i++)
+		{
+			read(pipefd[i][1],&actionJoueur,sizeof(int));
+			while(actionJoueur==PIOCHER)
+			{
+				carte=drawCard(d);
+				write(pipefd[i+4][0],&carte,sizeof(int));
+				read(pipefd[i][1],&actionJoueur,sizeof(int));
+				}
+			
+			
+			}
+			mainCourante++;
 		}
+	for( a = 0; a < jeu.nbJoueur*2; a++){
+		close(pipefd[a][0]);
+		close(pipefd[a][1]);
+	}	
+	
+	
 	}
+	
+	else{
+	int k;	
+	for(k=0;k<jeu.nbJoueur;k++)
+	{	if(getpid()==pid[k])
+		{
+			
+			jouer(j[k],pipefd[k]);
+			while(j[k].action==PIOCHER)
+			{
+				write(pipefd[k][1],&(j[k].action),sizeof(int));
+				read(pipefd[k][1],&(j[k].main.tab[j[k].main.sommet]),sizeof(int));
+				j[k].main.sommet++;
+				
+				}
+
+			}
+		
+	}	
+		
+		
+		
+		
+		for( a = 0; a < jeu.nbJoueur*2; a++){
+		close(pipefd[a][0]);
+		close(pipefd[a][1]);
+	}	
+		
+		
+		}
+	
+	
 	
 	
 	/*			joueur1.pid=fork();
@@ -125,5 +183,8 @@ printCard((carte = drawCard(deck)));
 		removeDeck(deck);
 	
 	*/
+	
+	
+	
 	exit(0);
 }
