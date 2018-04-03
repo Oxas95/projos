@@ -22,10 +22,10 @@ typedef struct{
 typedef struct{
 	pid_t pid;
 	Main main;
-	int nb_jeton;
+	int nbJetons;
 	int score;
 	int mise;
-	int mise_prec;
+	int mise_base;
 	Type_de_mise typeMise; 
 	int valStop;
 	int objJetons;
@@ -36,4 +36,4 @@ typedef struct{
 
 Joueur jouer(Joueur j,int* pipefd);
 	
-int Mise(Joueur j);
+void Mise(Joueur j);

@@ -8,38 +8,36 @@
 #include "banque.h"
 // IL FAUT RAJOUTER action =PIOCHE à l'initialisation
 
-int main(int argc,char*argv[] ){	
+int main(int argc,char*argv[] ){
+	int a;	
 	Plateau jeu = init_jeu();	//recupere les données du plateau
 	Joueur j[jeu.nbJoueur]; init_joueurs(j,jeu.nbJoueur);
 	pid_t bank_pid=getpid();
 	pid_t pid[jeu.nbJoueur];
-	int pipefd[jeu.nbJoueur*2][2];	
-	for(int a = 0; a < jeu.nbJoueur*2; a++){
+	int pipefd[jeu.nbJoueur * 2][2];	
+	for(a = 0; a < jeu.nbJoueur*2; a++){
 		if(pipe(pipefd[a]) == -1){ //crée les tubes
 			exit(3);
 		}
 	}
 	
-	pid[0] = fork();
-	for(int i = 1; i < jeu.nbJoueur; i++){  //crée les processus
-		if(pid[i-1]){
-			pid[i] = fork();
+	for(i = 0; i < jeu.nbJoueur; i++){  //crée les processus
+			if((pid[i] = fork()) == 0)
+				action_joueurs(j[i],pipefd[i],jeu.nbMains);
 		}
 	}
 	
+	action_banque(pipefd, jeu);
+	
 	if(getpid() == bank_pid){ // si on est dans la banque, on crée un deck et on mélange
 	
-		initDeckLib();
-		deck_t* d;
-		d=initDeck(P52,jeu.nbDecks);
-		shuffleDeck(d);
-		int i,a,mainCourante=0;
+		
+		int i,mainCourante=0;
 		int carte;
 		int actionJoueur;
-	while(mainCourante<jeu.nbMains)	
-		{
-		for(i=0;i<jeu.nbJoueur;i++)
-		{
+		
+		while(mainCourante<jeu.nbMains)	{
+			for(i=0;i<jeu.nbJoueur;i++){
 			read(pipefd[i][1],&actionJoueur,sizeof(int));
 			while(actionJoueur==PIOCHER)
 			{

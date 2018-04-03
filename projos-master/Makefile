@@ -20,17 +20,16 @@ joueur.o: joueur.c
 	gcc -c -g -Wall joueur.c lire_ecrire.h deck.h 
 
 banque.o: banque.c 
-	gcc -c -g -Wall banque.c deck.h 
+	gcc -c -g -Wall banque.c deck.h joueur.h
 
 se_fichier.o: se_fichier.c
 		gcc -c -g -Wall se_fichier.c se_fichier.h
 	
 clean:
-	rm -f deck.o
-	rm -f lire_ecrire.o
-	rm -f Main.o
-	rm -f joueur.o
-	rm -f banque.o
+	rm -f *.o
 	rm -f lv21
+
+run: lv21
+	./lv21
 	
 	

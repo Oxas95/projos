@@ -1,30 +1,5 @@
-# projos
 
-CE QUE J AI FAIS
--Alors j'ai mis dans le tttt ce que je pense qu'on devrait faire en main (c'est en pseudo c)
--Le Maintmp c'est l'ancien main que j'ai viré car pas efficace selon moi
--J'ai corrigé toutes les erreurs de syntaxes(y en avait beaucoup) donc ça compile
-
- CE QU'IL FAUT FAIRE
-
--Vérifier que les différentes fonctions marchent correctement
--Ecrire le main et la fonction jouer  --> on fais ça mardi matin
--Ecrire la fonction d'ecriture de fichier   -> pour ecrire quoi ?
--Faire des printf avec de write pour ecrire les actions en cours (sorte de 
-printf)     ->   fini et a tester
-
-
-
-CHOSE FAITE PAR MATHIEU
-
-j'ai créé une enumeration pour le type de mise, ça evite de créer des constantes en macro et jouer sur les caracteres
-
-j'ai fais en sorte que on est un tableau fixe de joueur , et j'ai fais la fonction pour les initialiser
-
-j'ai créé la fonction "print" pour faire un printf mais on devra verifier que ça marche
-
-
-Update 2 avril:
+----------Update 2 avril: --------
 
 Erreurs de syntaxes corrigées
 
@@ -33,3 +8,17 @@ il reste plus que les mises )
 
 Fonction joueur faite 
 
+--------chose a faire---------
+
+supprimer les pid[] si on s'en sert pas
+faire des fonctions pour gerer la structure Main dans joueur.h
+fonction pour obtenir les points d'une carte et une pour calculer l'ensemble des points
+faire un deuxieme pipe pour le fils
+et renommer lecture et ecriture
+
+
+peut etre : faire une enumeration booleen
+
+-------3 avril : -----------
+
+lirefichier -> le print marche (by pierre)
