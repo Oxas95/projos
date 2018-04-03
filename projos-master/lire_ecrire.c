@@ -64,8 +64,8 @@ int taille_chaine(const char* string){
 	return cpt;
 }
 
-void print(const char* string){ //a tester
-	SE_FICHIER s = SE_ouverture("sortie.txt",WRITE);
-	SE_ecritureChaine(s,string,taille_chaine(string));
-	SE_fermeture(s);
+void print(const char* string){ 
+
+	int fd = STDOUT_FILENO;
+	write(fd,string,taille_chaine(string));
 }
