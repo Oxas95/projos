@@ -14,13 +14,13 @@ lire_ecrire.o: lire_ecrire.c
 	gcc -c -g -Wall lire_ecrire.c lire_ecrire.h se_fichier.h
 	
 Main.o: Main.c
-	gcc -c -g -Wall Main.c lire_ecrire.h deck.h
+	gcc -c -g -Wall Main.c banque.h deck.h
 
 joueur.o: joueur.c 
 	gcc -c -g -Wall joueur.c lire_ecrire.h deck.h 
 
 banque.o: banque.c 
-	gcc -c -g -Wall banque.c deck.h joueur.h
+	gcc -c -g -Wall banque.c deck.h banque.h
 
 se_fichier.o: se_fichier.c
 		gcc -c -g -Wall se_fichier.c se_fichier.h

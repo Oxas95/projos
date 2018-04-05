@@ -4,12 +4,11 @@
 #include <signal.h>
 #include <fcntl.h>
 #include "deck.h"
-#include "lire_ecrire.h"
 #include "banque.h"
 // IL FAUT RAJOUTER action =PIOCHE à l'initialisation
 
 int main(int argc,char*argv[] ){
-	int a;	
+	int a,i;
 	Plateau jeu = init_jeu();	//recupere les données du plateau
 	Joueur j[jeu.nbJoueur]; init_joueurs(j,jeu.nbJoueur);
 	pid_t bank_pid=getpid();
@@ -25,14 +24,17 @@ int main(int argc,char*argv[] ){
 			if((pid[i] = fork()) == 0)
 				action_joueurs(j[i],pipefd[i],jeu.nbMains);
 		}
+	
+	action_banque(pipefd,jeu);
+	exit(0);
+	
 	}
 	
-	action_banque(pipefd, jeu);
-	
+	/*
 	if(getpid() == bank_pid){ // si on est dans la banque, on crée un deck et on mélange
 	
 		
-		int i,mainCourante=0;
+		int mainCourante=0;
 		int carte;
 		int actionJoueur;
 		
@@ -88,7 +90,7 @@ int main(int argc,char*argv[] ){
 		
 		}
 	
-	
+	*/
 	
 	
 	/*			joueur1.pid=fork();
@@ -184,5 +186,4 @@ printCard((carte = drawCard(deck)));
 	
 	
 	
-	exit(0);
-}
+

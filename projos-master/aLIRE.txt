@@ -22,3 +22,21 @@ peut etre : faire une enumeration booleen
 -------3 avril : -----------
 
 lirefichier -> le print marche (by pierre)
+
+
+---------5avril----------------
+
+initialisation main:ok
+le code compile,
+j'ai commencé la fonction pour écrire mais il faudrait faire
+une fonction écrire une fonction écrire chiffre et écrire_nombre 
+qui n'utilisent pas sprintf(normalement en faisant char c= int i+'0' on obtient le 
+char correspondant  à un int). Il faut donc faire des divisions successives comme
+pour la lecture et lire chaque chiffre du nombre
+
+
+
+ 
+ 
+
+
