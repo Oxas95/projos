@@ -35,6 +35,9 @@ char correspondant  à un int). Il faut donc faire des divisions successives com
 pour la lecture et lire chaque chiffre du nombre
 
 
+-----------7 avril ------------------------
+
+Fonction d'écriture de fichiers fini avec l'écriture des entiers 
 
  
  

@@ -96,6 +96,40 @@ void ecrire_carte(SE_FICHIER f,const int value) {
 	}
 
 }
+int nombreChiffre(int nb)
+{
+	int cmp=1;
+	while((nb=(nb/10)))
+	{
+		cmp++;
+		}
+	
+	return cmp;
+	
+	}
+
+
+
+void ecrireEntier(SE_FICHIER f,int nb)
+{
+		int taille=nombreChiffre(nb);
+		char nombre[taille];
+	
+		int i,chiffre;
+		for(i=taille-1;i>=0;i--)
+		{
+		chiffre=nb%10;
+		nombre[i]=chiffre+'0';
+		nb/=10;
+			}
+		for(i=0;i<taille;i++)
+		{
+		write(f.descripteur,&nombre[i],sizeof(char));
+		
+		
+			}
+	
+	}
 
 void ecrire_fichier(Joueur j,Main banque,int totalBanque )
 {
@@ -121,8 +155,15 @@ void ecrire_fichier(Joueur j,Main banque,int totalBanque )
 		ecrire_carte(f,j.main.tab[i]);
 		}
 	
-
-	
+		ecrireEntier(f,j.score);
+		for(i=0;i<banque.sommet;i++)// écrit toutes les cartes de la banque
+	{
+		ecrire_carte(f,banque.tab[i]);
+		}
+		ecrireEntier(f,totalBanque);
+		ecrireEntier(f,j.mise);
+		ecrireEntier(f,j.score);// à remplacer par le gain
+		ecrireEntier(f,j.nbJetons);
 	
 	
 	SE_fermeture(f);
