@@ -5,8 +5,8 @@
 
 // constantes d'ouverture de fichiers pour SE_ouverture
 #define READ O_RDONLY
-#define WRITE O_WRONLY
-#define ADD O_APPEND
+#define WRITE O_WRONLY|O_CREAT
+#define ADD O_APPEND|WRITE
 #define WR O_RDWR
 
 #ifndef H_SE_FICHIER

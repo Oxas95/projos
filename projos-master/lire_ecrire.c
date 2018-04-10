@@ -76,16 +76,17 @@ void print(const char* string){
 void ecrire_numero_carte(SE_FICHIER f,const int value){
 	int i = (value % 13) + 1;
 	SE_ecritureCaractere(f,i + '0');
+	SE_ecritureCaractere(f,';');
 }
 
 void ecrire_carte(SE_FICHIER f,const int value) {
 	//if (value == 52) { print ("J*"); return; }
 	switch (value % 13) {
-		case 0: SE_ecritureCaractere(f,'A');   break;
-		case 9: SE_ecritureCaractere(f,'X');   break;
-		case 10: SE_ecritureCaractere (f,'J'); break;
-		case 11: SE_ecritureCaractere (f,'Q'); break;
-		case 12: SE_ecritureCaractere (f,'K'); break;
+		case 0: SE_ecritureCaractere(f,'A'); SE_ecritureCaractere(f,';');  break;
+		case 9: SE_ecritureCaractere(f,'X');SE_ecritureCaractere(f,';');   break;
+		case 10: SE_ecritureCaractere (f,'J');SE_ecritureCaractere(f,';'); break;
+		case 11: SE_ecritureCaractere (f,'Q');SE_ecritureCaractere(f,';'); break;
+		case 12: SE_ecritureCaractere (f,'K');SE_ecritureCaractere(f,';'); break;
 		default: ecrire_numero_carte(f,value);
 	}
 }
@@ -120,22 +121,23 @@ void ecrire_fichier(Joueur j,Main banque,int totalBanque){
 	for (i = 0; i < 8; i++){
 		s[11] = i + '0';
 		if(j.numero == i)
-			f = SE_ouverture(s,O_CREAT|ADD);
+			f = SE_ouverture(s,ADD);
 	}
 	for(i = 0; i < j.main.sommet; i++){// écrit toutes les cartes de la main + voir si <=
 		ecrire_carte(f,j.main.tab[i]);
 	}
-	
 	ecrireEntier(f,j.score);
+	SE_ecritureCaractere(f,';');
 	for(i = 0; i < banque.sommet; i++){// écrit toutes les cartes de la banque
 		ecrire_carte(f,banque.tab[i]);
 	}
 	ecrireEntier(f,totalBanque);
+	SE_ecritureCaractere(f,';');
 	ecrireEntier(f,j.mise);
+	SE_ecritureCaractere(f,';');
 	ecrireEntier(f,j.score);// à remplacer par le gain
+	SE_ecritureCaractere(f,';');
 	ecrireEntier(f,j.nbJetons);
-	
-	
 	SE_fermeture(f);
 }
 
