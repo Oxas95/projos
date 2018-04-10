@@ -30,6 +30,7 @@ clean:
 	rm -f lv21
 
 run: lv21
+	reset
 	./lv21
 	
 	

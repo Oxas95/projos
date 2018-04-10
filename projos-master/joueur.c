@@ -20,37 +20,59 @@ return m;
 
 
 
-void action_joueurs(Joueur j, int pipefd[2], int nbMains){
+void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 	int i;
+	printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
+
 	for (i = 0; i < nbMains; i++){
 		Mise(&j);
 		j.nbJetons -= j.mise;
-		write(pipefd[0],&j.mise,sizeof(int));
-		/*
-		for (k = 0; k < 21; k++)//initialisation de la main a vide
-			j.main.tab[k] = 0;
-		j.main.sommet = 0;
-		*/
+		printf("mise\n");
+		write(ecriture[1],&j.mise,sizeof(int));
 		j.main=init_main();
-		read(pipefd[1],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 1ere carte
-		read(pipefd[1],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 2eme carte
+		printf("recuperation carte 1\n");
+		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 1ere carte
+		printf("recuperation carte 2\n");
+		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 2eme carte
 		
-		j = jouer(j, pipefd);
-		
-		//ecrire_fichier(j);
+		printf("jouer\n");
+		j = jouer(j, ecriture,lecture);
+		printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
+
+		ecrire_fichier(j,j.main,0); //mettre les infos de la banque
+		exit(0); // a virer !!
 	}
 }
 
-Joueur jouer(Joueur j,int pipefd[]){
-	int carte;
+int calculScore(const int value, int *score, int *cpt) {
+	switch (value % 13) {
+		case 0: *score += 11; (*cpt)++;  break;
+		case 9:  *score += 10; break;
+		case 10: *score += 10; break;
+		case 11: *score += 10; break;
+		case 12: *score += 10; break;
+		default: *score += ((value % 13) + 1); break;
+	}
+	if(*score > 21){
+		if(*cpt > 0){
+			(*cpt)--;
+			*score -= 10;
+		}
+	}
+	return *score <= 21;
+}
+
+Joueur jouer(Joueur j,int ecriture[], int lecture[]){
+	int cpt = 0;
 	while(j.score < j.valStop){
 		j.action = PIOCHER;
-		write(pipefd[0],&j.action,sizeof(int)); // envoie son choix
-		read(pipefd[1],&j.main.tab[j.main.sommet++],sizeof(int)); //reçois la carte
+		write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
+		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //reçois la carte
+		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
 	}
 	
 	j.action = RESTER;
-	write(pipefd[0],&j.action,sizeof(int)); // envoie son choix
+	write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
 	
 	return j;
 }

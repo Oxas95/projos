@@ -16,7 +16,7 @@ typedef struct{
 
 }Main;
 
-
+Main init_main();
 
 
 typedef struct{
@@ -34,9 +34,8 @@ typedef struct{
 	int fluctuation; //0 si a perdu au dernier tour, 1 si a gagné
 }Joueur;
 
-
-Joueur jouer(Joueur j,int* pipefd);
+Joueur jouer(Joueur j,int ecriture[], int lecture[]);
 	
 void Mise(Joueur *j);
 
-void action_joueurs(Joueur j, int pipefd[2], int nbMains);
+void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains);
