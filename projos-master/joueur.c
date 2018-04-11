@@ -66,12 +66,15 @@ Joueur jouer(Joueur j,int ecriture[], int lecture[]){
 	int cpt = 0;
 	while(j.score < j.valStop){
 		j.action = PIOCHER;
+		print("envoi pioche\n");
 		write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
+		print("recois carte\n");
 		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //reçois la carte
 		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
 	}
-	
-	j.action = RESTER;
+	if(j.main.sommet == 2 && j.score == 21) j.action = BLACKJACK;
+	else j.action = RESTER;
+	print("envoie rester\n");
 	write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
 	
 	return j;

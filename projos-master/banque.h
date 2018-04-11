@@ -3,9 +3,11 @@
 
 typedef struct {
 	pid_t pid;
-	int main[20];
-	deck_t deck;
+	Main main;
+	deck_t d;
 	int score;
 }Banque;
 
 void action_banque(int(*ecriture)[2], int(*lecture)[2],Plateau jeu);
+
+Banque jouerBanque(Banque banque);

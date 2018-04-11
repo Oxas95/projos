@@ -1,5 +1,6 @@
 #define PIOCHER 200
 #define RESTER 201
+#define BLACKJACK 221
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -39,3 +40,5 @@ Joueur jouer(Joueur j,int ecriture[], int lecture[]);
 void Mise(Joueur *j);
 
 void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains);
+
+int calculScore(const int value, int *score, int *cpt);
