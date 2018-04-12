@@ -70,8 +70,8 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 			}while(action == PIOCHER);
 			print("rester/blackjack lue\n");
 			if(action == BLACKJACK) blackjack[i] = 1;
-			
-			//recevoir score
+			print("reçois score\n");
+			read(lecture[j][0],&score[i],sizeof(int)); //reception du score obtenue par le joueur
 		}
 		
 		b = jouerBanque(b);
@@ -108,14 +108,16 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		
 		//envoi mise aux joueurs
 		print("envoi des gains aux joueurs\n");
-		for(j = 0; j < jeu.nbJoueur; j++) printf("gain du joueur %d : %d\n",j,mise[j]);
+		for(j = 0; j < jeu.nbJoueur; j++){
+			printf("gain du joueur %d : %d\n",j,mise[j]);
+			write(ecriture[j][1],&mise[i],sizeof(int));
+		}
 		
 		//transfert ses resultats de partie
 		print("envoi des resultats de la partie (score banque etc...)\n");
 		
 		print("cartes utilisés mis en défausse\n");
 		//discardAll
-		exit(0); // a virer !!
 	}
 	
 }

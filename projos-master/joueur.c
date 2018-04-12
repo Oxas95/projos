@@ -21,7 +21,7 @@ return m;
 
 
 void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
-	int i;
+	int i, miseRecu;
 	printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
 
 	for (i = 0; i < nbMains; i++){
@@ -37,10 +37,19 @@ void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 		
 		printf("jouer\n");
 		j = jouer(j, ecriture,lecture);
+		
+		print("ajoute mise a son porte-feuille\n");
+		read(lecture[0],&miseRecu,sizeof(int)); //recupere la mise reçu
+		j.nbJetons += miseRecu;
+		
+		print("verifie s'il a perdu ou gagné\n");
+		if(miseRecu == 0)j.fluctuation = 0;
+		else j.fluctuation = 1;
+		
 		printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
 
+		print("ecriture du journal");
 		ecrire_fichier(j,j.main,0); //mettre les infos de la banque
-		exit(0); // a virer !!
 	}
 }
 
@@ -74,9 +83,10 @@ Joueur jouer(Joueur j,int ecriture[], int lecture[]){
 	}
 	if(j.main.sommet == 2 && j.score == 21) j.action = BLACKJACK;
 	else j.action = RESTER;
-	print("envoie rester\n");
+	print("envoie arret\n");
 	write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
-	
+	print("envoie score\n");
+	write(ecriture[1],&j.score,sizeof(int)); // envoie son score
 	return j;
 }
 
