@@ -57,6 +57,8 @@ void init_joueurs(Joueur j[], int taille_tab){
 		if(SE_lectureEntier(f,&(j[i].objJetons)) < 1)exit(1);
 		j[i].numero = i;
 		j[i].score = 0;
+		j[i].fluctuation=0;	
+		j[i].mise_base=j[i].mise;
 	}
 	
 	SE_fermeture(f);
@@ -76,19 +78,18 @@ void print(const char* string){
 void ecrire_numero_carte(SE_FICHIER f,const int value){
 	int i = (value % 13) + 1;
 	SE_ecritureCaractere(f,i + '0');
-	SE_ecritureCaractere(f,';');
 }
 
 void ecrire_carte(SE_FICHIER f,const int value) {
 	//if (value == 52) { print ("J*"); return; }
-	switch (value % 13) {
-		case 0: SE_ecritureCaractere(f,'A'); SE_ecritureCaractere(f,';');  break;
-		case 9: SE_ecritureCaractere(f,'X');SE_ecritureCaractere(f,';');   break;
-		case 10: SE_ecritureCaractere (f,'J');SE_ecritureCaractere(f,';'); break;
-		case 11: SE_ecritureCaractere (f,'Q');SE_ecritureCaractere(f,';'); break;
-		case 12: SE_ecritureCaractere (f,'K');SE_ecritureCaractere(f,';'); break;
-		default: ecrire_numero_carte(f,value);
-	}
+	int val=value%13;
+	if(val==0) SE_ecritureCaractere(f,'A');
+	else if(val==9)SE_ecritureCaractere(f,'X');
+	else if(val==10) SE_ecritureCaractere (f,'J');
+	else if(val==11) SE_ecritureCaractere (f,'Q');
+	else if(val==12) SE_ecritureCaractere (f,'K');
+	else ecrire_numero_carte(f,value);
+
 }
 int nombreChiffre(int nb){
 	int cmp=1;
@@ -126,19 +127,34 @@ void ecrire_fichier(Joueur j,Main banque,int totalBanque){
 	for(i = 0; i < j.main.sommet; i++){// écrit toutes les cartes de la main + voir si <=
 		ecrire_carte(f,j.main.tab[i]);
 	}
+	SE_ecritureCaractere(f,';');
 	ecrireEntier(f,j.score);
 	SE_ecritureCaractere(f,';');
 	for(i = 0; i < banque.sommet; i++){// écrit toutes les cartes de la banque
 		ecrire_carte(f,banque.tab[i]);
+
 	}
+	SE_ecritureCaractere(f,';');	
 	ecrireEntier(f,totalBanque);
 	SE_ecritureCaractere(f,';');
 	ecrireEntier(f,j.mise);
 	SE_ecritureCaractere(f,';');
-	ecrireEntier(f,j.score);// à remplacer par le gain
+	ecrireEntier(f,j.gain);// à remplacer par le gain
 	SE_ecritureCaractere(f,';');
 	ecrireEntier(f,j.nbJetons);
+	SE_ecritureCaractere(f,';');
+	SE_ecritureCaractere(f,'\n');
 	SE_fermeture(f);
 }
 
+void viderFichier(int nb)
+{
+	int i;
+	for(i=0;i<nb;i++)
+	{
+		char s[40] = {'t','o','u','r','/','J','o','u','e','u','r',i + '0','.','t','x','t','\0'};
+		unlink(s);
+		
+		}
 
+	}

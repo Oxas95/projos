@@ -10,4 +10,4 @@ typedef struct {
 
 void action_banque(int(*ecriture)[2], int(*lecture)[2],Plateau jeu);
 
-Banque jouerBanque(Banque banque);
+Banque jouerBanque(Banque banque,int * cpt);

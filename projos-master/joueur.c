@@ -21,72 +21,79 @@ return m;
 
 
 void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
-	int i, miseRecu;
+	int i;int cpt=0;Main banque;int totalBanque;int continuer=1;
 	printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
 
-	for (i = 0; i < nbMains; i++){
-		Mise(&j);
+	for (i = 0; (i < nbMains); i++){
+		Mise(&j);j.gain=0;
 		j.nbJetons -= j.mise;
-		printf("mise\n");
+		//printf("mise\n");
 		write(ecriture[1],&j.mise,sizeof(int));
 		j.main=init_main();
-		printf("recuperation carte 1\n");
+		//printf("recuperation carte 1\n");
 		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 1ere carte
-		printf("recuperation carte 2\n");
+		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
+		//printf("recuperation carte 2\n");
 		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 2eme carte
-		
-		printf("jouer\n");
-		j = jouer(j, ecriture,lecture);
-		
-		print("ajoute mise a son porte-feuille\n");
-		read(lecture[0],&miseRecu,sizeof(int)); //recupere la mise reçu
-		j.nbJetons += miseRecu;
-		
-		print("verifie s'il a perdu ou gagné\n");
-		if(miseRecu == 0)j.fluctuation = 0;
-		else j.fluctuation = 1;
-		
-		printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
-
-		print("ecriture du journal");
-		ecrire_fichier(j,j.main,0); //mettre les infos de la banque
+		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
+		//printf("jouer\n");
+		j = jouer(j, ecriture,lecture,&cpt);
+		//printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
+		write(ecriture[1],&j.score,sizeof(int));printf("Joueur :%d,score envoyé:%d\n",j.numero,j.score);// les joueurs envoient leurs scores
+		read(lecture[0],&j.gain,sizeof(int));j.nbJetons+=j.gain;//récupère les gains
+		//récupération résultat banque
+		read(lecture[0],&banque,sizeof(Main));
+		read(lecture[0],&totalBanque,sizeof(int));//
+		//Fin de la main, écriture du fichier 
+		ecrire_fichier(j,banque,totalBanque); //mettre les infos de la banque
+		j.score=0;
+		/*if ( j.nbJetons == 0 || j.nbJetons > j.objJetons ){
+			continuer=0;
+			write(ecriture[1],&continuer,sizeof(int));
+			}*/
+		//exit(0); // a virer !!
 	}
+
+	close(lecture[0]);
+	close(lecture[1]);
+	close(ecriture[0]);
+	close(ecriture[1]);
+
 }
 
 int calculScore(const int value, int *score, int *cpt) {
-	switch (value % 13) {
-		case 0: *score += 11; (*cpt)++;  break;
-		case 9:  *score += 10; break;
-		case 10: *score += 10; break;
-		case 11: *score += 10; break;
-		case 12: *score += 10; break;
-		default: *score += ((value % 13) + 1); break;
-	}
+	int val=value%13;
+		if(val==0) {*score += 11; (*cpt)++;}
+	else if(val==9)  *score += 10;
+	else if(val==10) *score += 10;
+	else if(val==11) *score += 10;
+	else if(val==12) *score += 10;
+	else  *score += ((value % 13) + 1);
+
 	if(*score > 21){
 		if(*cpt > 0){
 			(*cpt)--;
 			*score -= 10;
 		}
 	}
-	return *score <= 21;
+	return (*score <= 21);
 }
 
-Joueur jouer(Joueur j,int ecriture[], int lecture[]){
-	int cpt = 0;
-	while(j.score < j.valStop){
+Joueur jouer(Joueur j,int ecriture[], int lecture[],int *cpt){
+	while(j.score <= j.valStop){
+		printf("Joueur:%d/////%d;\n",j.numero,j.score);
 		j.action = PIOCHER;
-		print("envoi pioche\n");
+		//print("envoi pioche\n");
 		write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
-		print("recois carte\n");
+		//print("recois carte\n");
 		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //reçois la carte
-		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
+		calculScore(j.main.tab[j.main.sommet - 1],&j.score,cpt);
 	}
 	if(j.main.sommet == 2 && j.score == 21) j.action = BLACKJACK;
 	else j.action = RESTER;
-	print("envoie arret\n");
+	//print("envoie rester\n");
 	write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
-	print("envoie score\n");
-	write(ecriture[1],&j.score,sizeof(int)); // envoie son score
+	
 	return j;
 }
 
@@ -94,14 +101,15 @@ int miseCroissante(Joueur j){
 	if(j.fluctuation == 0){
 		return (j.mise_base > j.nbJetons)? j.nbJetons : j.mise_base;
 	}
-	else return (j.mise * 2 > j.nbJetons)? j.nbJetons : j.mise *2 ;
+	else return (j.mise * 2 > j.nbJetons)? j.nbJetons : j.mise * 2 ;
+
 }
 
 int miseDescendante(Joueur j){
 	if(j.fluctuation == 0){
 		return (j.mise_base > j.nbJetons)? j.nbJetons : j.mise_base;
 	}
-	else return (j.mise / 2 > j.nbJetons)? j.nbJetons : j.mise / 2;
+	else return (j.mise /2 > j.nbJetons)? j.nbJetons : j.mise/2;
 }
 
 void Mise(Joueur* j){

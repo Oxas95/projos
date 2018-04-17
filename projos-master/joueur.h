@@ -28,6 +28,7 @@ typedef struct{
 	int score;
 	int mise;
 	int mise_base;
+	int gain;
 	Type_de_mise typeMise; 
 	int valStop;
 	int objJetons;
@@ -35,7 +36,7 @@ typedef struct{
 	int fluctuation; //0 si a perdu au dernier tour, 1 si a gagné
 }Joueur;
 
-Joueur jouer(Joueur j,int ecriture[], int lecture[]);
+Joueur jouer(Joueur j,int ecriture[], int lecture[],int *cpt);
 	
 void Mise(Joueur *j);
 
