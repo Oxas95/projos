@@ -1,0 +1,65 @@
+
+----------Update 2 avril: --------
+
+Erreurs de syntaxes corrigées
+
+Main.c structuré(j'ai fait le système de pioche avec l'interaction banque-joueurs
+il reste plus que les mises )
+
+Fonction joueur faite 
+
+--------chose a faire---------
+
+supprimer les pid[] si on s'en sert pas
+faire des fonctions pour gerer la structure Main dans joueur.h
+fonction pour obtenir les points d'une carte et une pour calculer l'ensemble des points
+faire un deuxieme pipe pour le fils
+et renommer lecture et ecriture
+
+
+peut etre : faire une enumeration booleen
+
+-------3 avril : -----------
+
+lirefichier -> le print marche (by pierre)
+
+
+---------5avril----------------
+
+initialisation main:ok
+le code compile,
+j'ai commencé la fonction pour écrire mais il faudrait faire
+une fonction écrire une fonction écrire chiffre et écrire_nombre 
+qui n'utilisent pas sprintf(normalement en faisant char c= int i+'0' on obtient le 
+char correspondant  à un int). Il faut donc faire des divisions successives comme
+pour la lecture et lire chaque chiffre du nombre
+
+
+-----------7 avril ------------------------
+
+Fonction d'écriture de fichiers fini avec l'écriture des entiers 
+
+
+
+-----------A FAIRE------------------
+
+* Mettre des limites de nbJoueurs (on en met pas)
+* Régler les pipes (dans jouer de Joueur)
+* Init j.numero check
+* Effacer fichier au début             lesquels ?
+* Fermer les tubes correctment (fais)
+* Ecrire fichier
+* Vider mémoire
+* Faire discard all()  (fais)
+* Vérifier qui gagne 
+* Triangle des bermudes (fais)
+* Supprimer fichiers             lesquels ?
+
+
+------------18 avril-----------------
+joueur -1 n'existe plus
+le probleme de pioche vide est reglé
+j'ai corrigé le discard all qui ne vidait pas la pile d'utilisation
+j'ai aussi ajouté une fonction qui met les cartes de la defausse dans le deck
+(le shuffle ne fais que melanger mais ne reprend pas les cartes dans la defausse)
+
