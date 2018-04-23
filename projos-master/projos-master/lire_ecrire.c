@@ -118,12 +118,9 @@ void ecrireEntier(SE_FICHIER f,int nb){
 
 void ecrire_fichier(Joueur j,Main banque,int totalBanque){
 	int i = 0; SE_FICHIER f;
-	char s[40] = {'t','o','u','r','/','J','o','u','e','u','r',i + '0','.','t','x','t','\0'};
-	for (i = 0; i < 8; i++){
-		s[11] = i + '0';
-		if(j.numero == i)
+	char s[40] = {'t','o','u','r','/','J','o','u','e','u','r',j.numero + '0','.','t','x','t','\0'};
+
 			f = SE_ouverture(s,ADD);
-	}
 	for(i = 0; i < j.main.sommet; i++){// écrit toutes les cartes de la main + voir si <=
 		ecrire_carte(f,j.main.tab[i]);
 	}
