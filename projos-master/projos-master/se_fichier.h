@@ -83,6 +83,14 @@ int SE_lectureEntier (SE_FICHIER fichier, int * entier);
 //							nombre d'octets lus sinon
 int SE_lectureEntier2(SE_FICHIER fichier, int * entier, char *c);
 
+// Convertit un entier en chaine de caractere
+// \param	entier			Entier à convertir
+// \return					chaine de caractere
+char* itoa(int entier);
+
+// Retourne le nombre de chiffres d'un entier
+int nombreChiffre(int nb);
+
 // Ecriture d'un entier dans un fichier
 // \param	fichier			Structure FICHIER où écrire
 // \param	entier			Entier à écrire

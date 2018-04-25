@@ -2,7 +2,7 @@ NOM=DEMONTI Pierre
 
 #Edition de liens
 
-lv21: Main.o deck.o lire_ecrire.o joueur.o banque.o se_fichier.o
+lv21:tour Main.o deck.o lire_ecrire.o joueur.o banque.o se_fichier.o
 	gcc -g -Wall Main.o deck.o lire_ecrire.o joueur.o banque.o se_fichier.o -o lv21
 
 #Compilation:
@@ -24,7 +24,11 @@ banque.o: banque.c
 
 se_fichier.o: se_fichier.c
 		gcc -c -g -Wall se_fichier.c se_fichier.h
-	
+
+tour:
+	rm -fr tour
+	mkdir tour
+
 clean:
 	rm -f *.o
 	rm -f lv21
@@ -32,8 +36,6 @@ clean:
 	rm -f *.gch
 
 run: lv21
-	rm -fr tour
-	mkdir tour
 	reset
 	./lv21
 	
