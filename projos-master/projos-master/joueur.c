@@ -72,11 +72,9 @@ int calculScore(const int value, int *score, int *cpt) {
 	else if(val == 12) *score += 10;
 	else  *score += ((value % 13) + 1);
 
-	if(*score > 21){
-		if(*cpt > 0){
-			(*cpt)--;
-			*score -= 10;
-		}
+	while(*score > 21 && cpt){
+		(*cpt)--;
+		*score -= 10;
 	}
 	if(score < 0) exit(5);
 	return (*score <= 21);
