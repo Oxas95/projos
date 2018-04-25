@@ -11,8 +11,7 @@ static inline void init_tableau(int *tab,int taille, int val){
 
 Banque init_Banque(Plateau jeu){
 	Banque b;
-	deck_t *deck = initDeck(P52,jeu.nbDecks);
-	b.d = *deck;
+	b.d = initDeck(P52,jeu.nbDecks);
 	b.score = 0;
 	return b;
 }
@@ -35,17 +34,9 @@ int prendreCarteDeck(deck_t *d){
 void discardAll(deck_t *d){
 	while(d->handCards != NULL){
 		discardCard(d,d->handCards->value);
-	}
-		
+	}	
 }
 
-void decaleTableauPipe(int(*ecriture)[2],int (*lecture)[2],int joueur,int nbJoueur){
-	for(int i = joueur; i < nbJoueur - 1 ; i++){
-		ecriture[i][0]=ecriture[i+1][0];ecriture[i][1]=ecriture[i+1][1];
-		lecture[i][0]=lecture[i+1][0];lecture[i][1]=lecture[i+1][1];
-	}
-
-}
 
 void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 	initDeckLib();
@@ -53,7 +44,7 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 	int mise[jeu.nbJoueur]; int continuer[jeu.nbJoueur];
 	int score[jeu.nbJoueur];
 	int blackjack[jeu.nbJoueur];
-	shuffleDeck(&b.d);
+	shuffleDeck(b.d);
 	int i,j,carte, action,cpt,fin = 1;
 	
 	for (i = 0; i < jeu.nbMains && fin; i++){
@@ -70,20 +61,20 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 			if(continuer[j])read(lecture[j][0],mise + j,sizeof(int));
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie 1 carte a chaque joueur
-			carte = prendreCarteDeck(&b.d);
+			carte = prendreCarteDeck(b.d);
 			print("envoi carte 1\n");
 			if(continuer[j])write(ecriture[j][1],&carte,sizeof(int));
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie une 2eme carte a chaque joueur
-			carte = prendreCarteDeck(&b.d);
+			carte = prendreCarteDeck(b.d);
 			print("envoi carte 2\n");
 			if(continuer[j])write(ecriture[j][1],&carte,sizeof(int));
 		}
 		
 		//La Banque pioche deux cartes
-		b.main.tab[b.main.sommet++] = prendreCarteDeck(&b.d);
+		b.main.tab[b.main.sommet++] = prendreCarteDeck(b.d);
 		calculScore(b.main.tab[b.main.sommet - 1],&b.score,&cpt);
-		b.main.tab[b.main.sommet++] = prendreCarteDeck(&b.d); //ajout des 2 carte a la banque
+		b.main.tab[b.main.sommet++] = prendreCarteDeck(b.d); //ajout des 2 carte a la banque
 		calculScore(b.main.tab[b.main.sommet - 1],&b.score,&cpt);
 		
 		//La banque fait le tour des joueurs et interagit avec eux
@@ -94,7 +85,7 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 					print("lecture action\n");
 					read(lecture[j][0],&action,sizeof(int));
 					if(action == PIOCHER){
-						carte = prendreCarteDeck(&b.d);
+						carte = prendreCarteDeck(b.d);
 						print("piocher lue, envoie carte\n");print("carte envoyé : ");printCard(carte); print("\n");
 						write(ecriture[j][1],&carte,sizeof(int));
 					}		
@@ -151,7 +142,7 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		}
 		
 		print("cartes utilisés mis en défausse\n");
-		discardAll(&b.d);
+		discardAll(b.d);
 		
 		fin = 0;
 		for(j = 0;j < jeu.nbJoueur; j++){
@@ -160,14 +151,14 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		}
 	}
 	
-	//il y a un problème de pointeur quand l'on souhaite libérer la mémoire d'un deck
-	//removeDeck(&b.d);
+	removeDeck(b.d);
+	
 }
 
 Banque jouerBanque(Banque banque,int * cpt){
 	int carte;
 	while(banque.score < 17){
-		carte = prendreCarteDeck(&banque.d);
+		carte = prendreCarteDeck(banque.d);
 		banque.main.tab[banque.main.sommet++] = carte;
 		calculScore(banque.main.tab[banque.main.sommet - 1],&banque.score,cpt);
 	}

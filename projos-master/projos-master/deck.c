@@ -82,7 +82,6 @@ void removeDeck (
 		deck->handCards = tmp->next;
 		free (tmp);
 	}
-
 	free (deck);
 }
 

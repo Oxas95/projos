@@ -4,7 +4,7 @@
 typedef struct {
 	pid_t pid;
 	Main main;
-	deck_t d;
+	deck_t *d;
 	int score;
 }Banque;
 
