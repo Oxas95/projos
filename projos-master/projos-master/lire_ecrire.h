@@ -12,4 +12,4 @@ void print(const char* string);
 
 void ecrire_fichier(Joueur j,Main banque,int totalBanque);
 
-void viderFichier(int nb);
+void viderFichier(int nbJoueur);

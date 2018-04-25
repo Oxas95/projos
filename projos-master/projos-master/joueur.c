@@ -22,37 +22,38 @@ void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 	
 
 	for (i = 0; (i < nbMains); i++){
-		printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n",j.numero,j.nbJetons,j.score,j.mise,j.valStop,j.objJetons);
-		Mise(&j);j.gain = 0;
-		j.nbJetons -= j.mise;
-		printf("mise\n");
-		write(ecriture[1],&j.mise,sizeof(int));
-		j.main=init_main();
-		printf("recuperation carte 1\n");
-		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 1ere carte
-		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
-		printf("recuperation carte 2\n");
-		read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 2eme carte
-		calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
-		printf("jouer\n");
-		j = jouer(j, ecriture,lecture,&cpt);
-	
-		write(ecriture[1],&j.score,sizeof(int));printf("Joueur :%d,score envoyé:%d\n",j.numero,j.score);// les joueurs envoient leurs scores
-		read(lecture[0],&j.gain,sizeof(int));j.nbJetons+=j.gain;//récupère les gains
-		print("reception du gain\n");
-		//récupération résultat banque
-		print("reception données de la banque\n");
-		read(lecture[0],&banque,sizeof(Main));
-		read(lecture[0],&totalBanque,sizeof(int));
+		if(continuer){
+			Mise(&j);j.gain = 0;
+			j.nbJetons -= j.mise;
+			print("mise\n");
+			write(ecriture[1],&j.mise,sizeof(int));
+			j.main=init_main();
+			print("recuperation carte 1\n");
+			read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 1ere carte
+			calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
+			print("recuperation carte 2\n");
+			read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 2eme carte
+			calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
+			print("jouer\n");
+			j = jouer(j, ecriture,lecture,&cpt);
 		
-		//Fin de la main, écriture du fichier 
-		ecrire_fichier(j,banque,totalBanque); //mettre les infos de la banque
-		j.score = 0; cpt = 0;
-		/*if ( j.nbJetons == 0 || j.nbJetons > j.objJetons ){
-			continuer = 0;
-			write(ecriture[1],&continuer,sizeof(int));
-		}*/
-		//exit(0); // a virer !!
+			write(ecriture[1],&j.score,sizeof(int));// les joueurs envoient leurs scores
+			read(lecture[0],&j.gain,sizeof(int));j.nbJetons+=j.gain;//récupère les gains
+			print("envoi du score et reception du gain\n");
+			
+			//récupération résultat banque
+			read(lecture[0],&banque,sizeof(Main));
+			read(lecture[0],&totalBanque,sizeof(int));
+			print("reception données de la banque\n");
+			
+			//Fin de la main, écriture du fichier 
+			ecrire_fichier(j,banque,totalBanque); //mettre les infos de la banque
+			j.score = 0; cpt = 0;
+			
+			/*if ( j.nbJetons == 0 || j.nbJetons > j.objJetons )//continuer à jouer ou non
+				continuer = 0;
+			write(ecriture[1],&continuer,sizeof(int));*/
+		}
 	}
 
 	close(lecture[0]);
@@ -83,7 +84,6 @@ int calculScore(const int value, int *score, int *cpt) {
 
 Joueur jouer(Joueur j,int ecriture[], int lecture[],int *cpt){
 	while(j.score <= j.valStop){
-		printf("Joueur: %d  score : %d\n",j.numero,j.score);
 		j.action = PIOCHER;
 		print("envoi pioche\n");
 		write(ecriture[1],&j.action,sizeof(int)); // envoie son choix
@@ -130,7 +130,7 @@ void Mise(Joueur* j){
 	
 	else {
 		print("Ce type de mise n'est pas pris en compte\n");
-		exit(3); // faire ecrire message pour mise inexistante
+		exit(3);
 	}
 	
 }

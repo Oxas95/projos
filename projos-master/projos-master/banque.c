@@ -55,6 +55,7 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 	int blackjack[jeu.nbJoueur];
 	shuffleDeck(&b.d);
 	int i,j,carte, action,cpt;
+	
 	for (i = 0; (i < jeu.nbMains); i++){
 		
 		init_tableau(blackjack,jeu.nbJoueur);
@@ -70,12 +71,12 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie 1 carte a chaque joueur
 			carte = prendreCarteDeck(&b.d);
-			print("envoi carte 1\n");//printf("%d\n",j);printCard(carte);
+			print("envoi carte 1\n");
 			write(ecriture[j][1],&carte,sizeof(int));
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie une 2eme carte a chaque joueur
 			carte = prendreCarteDeck(&b.d);
-			print("envoi carte 2\n");//printf("%d\n",j);printCard(carte);
+			print("envoi carte 2\n");
 			write(ecriture[j][1],&carte,sizeof(int));
 		}
 		
@@ -97,17 +98,16 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 					write(ecriture[j][1],&carte,sizeof(int));
 				}		
 			}while(action == PIOCHER);
+			
 			print("rester/blackjack lue\n");
 			if(action == BLACKJACK) blackjack[j] = 1;
 			//recevoir score
-			read(lecture[j][0],&score[j],sizeof(int));printf("score reçu:%d\n",score[j]);
+			read(lecture[j][0],&score[j],sizeof(int));
 		}
 		//La banque complète sa main
 		b = jouerBanque(b,&cpt);
 		
 		print("calcul gains\n");
-		printf("score banque : %d\n",b.score);
-		
 		if(b.main.sommet == 2 && b.score == 21){ //si la banque fais blackjack
 			print("la banque a blackjack\n");
 			for(j = 0; j < jeu.nbJoueur; j++){
@@ -117,30 +117,25 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		else if(b.score > 21){ //si la banque a perdu
 			print("la banque a perdu\n");
 			for(j = 0; j < jeu.nbJoueur; j++){
-				if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple *******??????????
+				if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple 
 				else if(score[j] < 22) mise[j] *= 2; //tout ceux qui n'ont pas perdu gagne le double de leur mise
-				else mise[j] = 0; //ceux qui ont perdu perdent leur mise *********?????????
+				else mise[j] = 0; //ceux qui ont perdu perdent leur mise 
 			}
 		}
 		
-	
-	
-	
-	else if(b.score < 22 && b.score > 16){ //si la banque atteint 17 ou + sans perdre
+		else if(b.score < 22 && b.score > 16){ //si la banque atteint 17 ou + sans perdre
 			print("la banque n'a pas perdu\n");
 			for(j = 0; j < jeu.nbJoueur; j++){
 				if(score[j] < 22 && score[j] > b.score) mise[j] *= 2; //tout ceux qui n'ont pas perdu et vaincu la banque gagne le double de leur mise
-				else if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple **********?????????
-				else if(score[j] == b.score); //si la banque fais egalité avec le joueur il recupere sa mise *********?????????
+				else if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple 
+				else if(score[j] == b.score); //si la banque fais egalité avec le joueur il recupere sa mise 
 				else  mise[j] = 0; //ceux qui ont perdu perdent leur mise
 			}
-			
 		}
 		
 		//envoi mise aux joueurs
 		print("envoi des gains aux joueurs\n");
 		for(j = 0; j < jeu.nbJoueur; j++) {
-			printf("gain du joueur %d : %d\n",j,mise[j]);
 			write(ecriture[j][1],&mise[j],sizeof(int));
 		}
 		
@@ -150,22 +145,21 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 			write(ecriture[j][1],&b.main,sizeof(Main));
 			write(ecriture[j][1],&b.score,sizeof(int));
 			
-			}
+		}
+		
 		print("cartes utilisés mis en défausse\n");
 		discardAll(&b.d);
 		
-		/*for(j=0;j<jeu.nbJoueur;j++){
+		/*for(j = 0;j < jeu.nbJoueur; j++){
 			read(lecture[j][0],&continuer[j],sizeof(int));
 			if(continuer[j] == 1)
-			decaleTableauPipe(ecriture,lecture,j,jeu.nbJoueur);
+				decaleTableauPipe(ecriture,lecture,j,jeu.nbJoueur);
 			jeu.nbJoueur--;
 		}*/
-		
-		
-		//exit(0); // a virer !!
-
 	}
 	
+	//il y a un problème de pointeur quand l'on souhaite libérer la mémoire d'un deck
+	//removeDeck(&b.d);
 }
 
 Banque jouerBanque(Banque banque,int * cpt){

@@ -6,18 +6,11 @@
 #include "deck.h"
 #include "banque.h"
 
-//for(i = 0; i < jeu.nbJoueur; i++)		printf("numero : %d\tnbJetons : %d\tscore : %d\tmise : %d\tvalStop : %d\tobJeton : %d\n\n",j[i].numero,j[i].nbJetons,j[i].score,j[i].mise,j[i].valStop,j[i].objJetons);
-
-
-
-
 int main(int argc,char*argv[] ){
 	int a,i;
 	Plateau jeu = init_jeu();	//recupere les données du plateau
 	viderFichier(jeu.nbJoueur);
 	Joueur j[jeu.nbJoueur]; init_joueurs(j,jeu.nbJoueur);
-	pid_t bank_pid=getpid();
-	pid_t pid[jeu.nbJoueur];
 	int ecriture[jeu.nbJoueur][2];	
 	int lecture[jeu.nbJoueur][2];	
 	for(i = 0; i < jeu.nbJoueur; i++){
@@ -33,7 +26,7 @@ int main(int argc,char*argv[] ){
 		do{
 			a = fork();
 		}while(a == -1);
-		if((pid[i] = a) == 0){
+		if(a == 0){
 			action_joueurs(j[i],lecture[i],ecriture[i],jeu.nbMains);
 			print("joueur a quitté\n");
 			exit(0);
@@ -45,7 +38,7 @@ int main(int argc,char*argv[] ){
 	for(i = 0; i < jeu.nbJoueur; i++)
 		wait(NULL);
 	
-	for(i=0; i < jeu.nbJoueur; i++){
+	for(i = 0; i < jeu.nbJoueur; i++){
 		close(lecture[i][0]);
 		close(lecture[i][1]);
 		close(ecriture[i][0]);
