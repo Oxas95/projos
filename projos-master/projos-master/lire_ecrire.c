@@ -46,12 +46,12 @@ void init_joueurs(Joueur j[], int taille_tab){
 	for (i = 0; i < taille_tab; i++){
 		if((SE_lectureEntier2(f,&(j[i].nbJetons),&c) < 1))exit(101);
 		if((SE_lectureEntier2(f,&(j[i].mise),&c) < 1))exit(1);
-		switch(c){
-			case ';' : j[i].typeMise = CSTE;		break;
-			case '+' : j[i].typeMise = CROISSANT;	break;
-			case '-' : j[i].typeMise = DESCENDANT;	break;
-			default  : j[i].typeMise = CSTE;		break;
-		}
+		
+		if	(c == ';') j[i].typeMise = CSTE;
+		else if	(c == '+') j[i].typeMise = CROISSANT;
+		else if	(c == '-') j[i].typeMise = DESCENDANT;
+		else exit(1);
+
 		if(j[i].typeMise != CSTE) SE_lectureCaractere(f,&c);
 		if(SE_lectureEntier2(f,&(j[i].valStop),&c) < 1)exit(1);
 		if(SE_lectureEntier2(f,&(j[i].objJetons),&c) < 1)exit(1);
@@ -144,7 +144,7 @@ void ecrire_fichier(Joueur j,Main banque,int totalBanque){
 	SE_ecritureCaractere(f,';');
 	SE_ecritureEntier(f,j.mise);
 	SE_ecritureCaractere(f,';');
-	SE_ecritureEntier(f,j.gain);// à remplacer par le gain
+	SE_ecritureEntier(f,j.gain);
 	SE_ecritureCaractere(f,';');
 	SE_ecritureEntier(f,j.nbJetons);
 	SE_ecritureCaractere(f,';');
