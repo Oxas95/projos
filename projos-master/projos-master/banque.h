@@ -2,7 +2,6 @@
 #include "deck.h"
 
 typedef struct {
-	pid_t pid;
 	Main main;
 	deck_t *d;
 	int score;
