@@ -35,8 +35,8 @@ int main(int argc,char*argv[] ){
 	}
 	
 	action_banque(ecriture,lecture,jeu);
-	//for(i = 0; i < jeu.nbJoueur; i++)
-		//wait(NULL);
+	for(i = 0; i < jeu.nbJoueur; i++)
+		wait(NULL);
 	
 	for(i = 0; i < jeu.nbJoueur; i++){
 		close(lecture[i][0]);
