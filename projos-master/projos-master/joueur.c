@@ -25,25 +25,26 @@ void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 		if(continuer){
 			Mise(&j);j.gain = 0;
 			j.nbJetons -= j.mise;
-			print("mise\n");
 			write(ecriture[1],&j.mise,sizeof(int));
+			print("mise\n");
 			j.main=init_main();
-			print("recuperation carte 1\n");
 			read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 1ere carte
 			calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
-			print("recuperation carte 2\n");
+			print("recuperation carte 1\n");
 			read(lecture[0],&j.main.tab[j.main.sommet++],sizeof(int)); //recuperation de la 2eme carte
 			calculScore(j.main.tab[j.main.sommet - 1],&j.score,&cpt);
-			print("jouer\n");
+			print("recuperation carte 2\n");
+			
+			print("un joueur joue\n");
 			j = jouer(j, ecriture,lecture,&cpt);
 		
 			write(ecriture[1],&j.score,sizeof(int));// les joueurs envoient leurs scores
 			read(lecture[0],&j.gain,sizeof(int));j.nbJetons+=j.gain;//récupère les gains
 			print("reception du gain\n");
 			//récupération résultat banque
-			print("reception données de la banque\n");
 			read(lecture[0],&banque,sizeof(Main));
 			read(lecture[0],&totalBanque,sizeof(int));
+			print("reception données de la banque\n");
 			
 			//Fin de la main, écriture du fichier 
 			ecrire_fichier(j,banque,totalBanque); //mettre les infos de la banque
@@ -51,8 +52,6 @@ void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 			
 			if ( j.nbJetons == 0 || j.nbJetons >= j.objJetons )
 				continuer = 0;
-			if(continuer)print("envoie continuer\n");
-			else print("envoie ne pas continuer\n");
 			write(ecriture[1],&continuer,sizeof(int));
 		}
 	}
