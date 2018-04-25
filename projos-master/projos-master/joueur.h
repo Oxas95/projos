@@ -21,7 +21,6 @@ Main init_main();
 
 
 typedef struct{
-	pid_t pid;
 	int numero;
 	Main main;
 	int nbJetons;
