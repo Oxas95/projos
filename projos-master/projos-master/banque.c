@@ -66,18 +66,18 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		cpt = 0; b.score = 0;
 		
 		for (j = 0; j < jeu.nbJoueur; j++){ //chaque joueur mise et la banque recoit la mise
-			print("recuperation mise\n");
 			if(continuer[j])read(lecture[j][0],mise + j,sizeof(int));
+			print("recuperation mise\n");
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie 1 carte a chaque joueur
 			carte = prendreCarteDeck(b.d);
-			print("envoi carte 1\n");//printf("%d\n",j);printCard(carte);
 			if(continuer[j])write(ecriture[j][1],&carte,sizeof(int));
+			print("envoi carte 1\n");
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie une 2eme carte a chaque joueur
 			carte = prendreCarteDeck(b.d);
-			print("envoi carte 2\n");//printf("%d\n",j);printCard(carte);
 			if(continuer[j])write(ecriture[j][1],&carte,sizeof(int));
+			print("envoi carte 2\n");
 		}
 		
 		//La Banque pioche deux cartes
@@ -91,12 +91,11 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 			if(continuer[j]){
 				print("un joueur joue, interaction avec banque\n");
 				do{
-					print("lecture action\n");
 					read(lecture[j][0],&action,sizeof(int));
 					if(action == PIOCHER){
 						carte = prendreCarteDeck(b.d);
-						print("piocher lue, envoie carte\n");print("carte envoyé : ");printCard(carte); print("\n");
 						write(ecriture[j][1],&carte,sizeof(int));
+						print("piocher lue, envoie carte\n");print("carte envoyé : ");printCard(carte); print("\n");
 					}		
 				}while(action == PIOCHER);
 				print("rester/blackjack lue\n");
@@ -119,9 +118,9 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		else if(b.score > 21){ //si la banque a perdu
 			print("la banque a perdu\n");
 			for(j = 0; j < jeu.nbJoueur; j++){
-				if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple *******??????????
+				if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple
 				else if(score[j] < 22) mise[j] *= 2; //tout ceux qui n'ont pas perdu gagne le double de leur mise
-				else mise[j] = 0; //ceux qui ont perdu perdent leur mise *********?????????
+				else mise[j] = 0; //ceux qui ont perdu perdent leur mise
 			}
 		}
 	
@@ -129,27 +128,27 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 			print("la banque n'a pas perdu\n");
 			for(j = 0; j < jeu.nbJoueur; j++){
 				if(score[j] < 22 && score[j] > b.score) mise[j] *= 2; //tout ceux qui n'ont pas perdu et vaincu la banque gagne le double de leur mise
-				else if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple **********?????????
-				else if(score[j] == b.score); //si la banque fais egalité avec le joueur il recupere sa mise *********?????????
+				else if (blackjack[j] == 1) mise[j] *= 3; //si un joueur fais blackjack il gagne le triple
+				else if(score[j] == b.score); //si la banque fais egalité avec le joueur il recupere sa mise 
 				else  mise[j] = 0; //ceux qui ont perdu perdent leur mise
 			}
 			
 		}
 		
 		//envoi mise aux joueurs
-		print("envoi des gains aux joueurs\n");
 		for(j = 0; j < jeu.nbJoueur; j++) {
 			if(continuer[j])write(ecriture[j][1],&mise[j],sizeof(int));
 		}
+		print("envoi des gains aux joueurs\n");
 		
 		//transfert ses resultats de partie
-		print("envoi des resultats de la partie (score banque etc...)\n");
 		for(j = 0; j < jeu.nbJoueur; j++){
 			if(continuer[j]){
 				write(ecriture[j][1],&b.main,sizeof(Main));
 				write(ecriture[j][1],&b.score,sizeof(int));
 			}
 		}
+		print("envoi des resultats de la partie (score banque etc...)\n");
 		
 		fin = 0;
 		for(j = 0; j < jeu.nbJoueur; j++){
