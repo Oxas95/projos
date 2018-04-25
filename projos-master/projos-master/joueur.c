@@ -50,9 +50,9 @@ void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 			ecrire_fichier(j,banque,totalBanque); //mettre les infos de la banque
 			j.score = 0; cpt = 0;
 			
-			/*if ( j.nbJetons == 0 || j.nbJetons > j.objJetons )//continuer à jouer ou non
-				continuer = 0;
-			write(ecriture[1],&continuer,sizeof(int));*/
+			if ( j.nbJetons == 0 || j.nbJetons > j.objJetons )//continuer à jouer ou non
+				continuer = 0,print("un joueur ne joue plus\n");
+			write(ecriture[1],&continuer,sizeof(int));
 		}
 	}
 

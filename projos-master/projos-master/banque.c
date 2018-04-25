@@ -3,9 +3,9 @@
 #include "banque.h"
 
 
-static inline void init_tableau(int *tab,int taille){
+static inline void init_tableau(int *tab,int taille, int val){
 	for(int i = 0;i < taille;i++){
-		tab[i] = 0;
+		tab[i] = val;
 	}
 }
 
@@ -54,30 +54,30 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 	int score[jeu.nbJoueur];
 	int blackjack[jeu.nbJoueur];
 	shuffleDeck(&b.d);
-	int i,j,carte, action,cpt;
+	int i,j,carte, action,cpt,fin = 1;
 	
-	for (i = 0; (i < jeu.nbMains); i++){
+	for (i = 0; i < jeu.nbMains && fin; i++){
 		
-		init_tableau(blackjack,jeu.nbJoueur);
+		init_tableau(blackjack,jeu.nbJoueur,0);
 		b.main = init_main(); 
-		init_tableau(score,jeu.nbJoueur);
-		init_tableau(mise,jeu.nbJoueur);
-		init_tableau(continuer,jeu.nbJoueur);
+		init_tableau(score,jeu.nbJoueur,0);
+		init_tableau(mise,jeu.nbJoueur,0);
+		init_tableau(continuer,jeu.nbJoueur,1);
 		cpt = 0; b.score = 0;
 		
 		for (j = 0; j < jeu.nbJoueur; j++){ //chaque joueur mise et la banque recoit la mise
 			print("recuperation mise\n");
-			read(lecture[j][0],mise + j,sizeof(int));
+			if(continuer[j])read(lecture[j][0],mise + j,sizeof(int));
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie 1 carte a chaque joueur
 			carte = prendreCarteDeck(&b.d);
 			print("envoi carte 1\n");
-			write(ecriture[j][1],&carte,sizeof(int));
+			if(continuer[j])write(ecriture[j][1],&carte,sizeof(int));
 		}
 		for (j = 0; j < jeu.nbJoueur ; j++){ //la banque envoie une 2eme carte a chaque joueur
 			carte = prendreCarteDeck(&b.d);
 			print("envoi carte 2\n");
-			write(ecriture[j][1],&carte,sizeof(int));
+			if(continuer[j])write(ecriture[j][1],&carte,sizeof(int));
 		}
 		
 		//La Banque pioche deux cartes
@@ -88,21 +88,23 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		
 		//La banque fait le tour des joueurs et interagit avec eux
 		for (j = 0; j < jeu.nbJoueur; j++){ //chaque joueur demande a piocher ou rester
-			print("un joueur joue, interaction avec banque\n");
-			do{
-				print("lecture action\n");
-				read(lecture[j][0],&action,sizeof(int));
-				if(action == PIOCHER){
-					carte = prendreCarteDeck(&b.d);
-					print("piocher lue, envoie carte\n");print("carte envoyé : ");printCard(carte); print("\n");
-					write(ecriture[j][1],&carte,sizeof(int));
-				}		
-			}while(action == PIOCHER);
-			
-			print("rester/blackjack lue\n");
-			if(action == BLACKJACK) blackjack[j] = 1;
-			//recevoir score
-			read(lecture[j][0],&score[j],sizeof(int));
+			if(continuer[j]){
+				print("un joueur joue, interaction avec banque\n");
+				do{
+					print("lecture action\n");
+					read(lecture[j][0],&action,sizeof(int));
+					if(action == PIOCHER){
+						carte = prendreCarteDeck(&b.d);
+						print("piocher lue, envoie carte\n");print("carte envoyé : ");printCard(carte); print("\n");
+						write(ecriture[j][1],&carte,sizeof(int));
+					}		
+				}while(action == PIOCHER);
+				
+				print("rester/blackjack lue\n");
+				if(action == BLACKJACK) blackjack[j] = 1;
+				//recevoir score
+				read(lecture[j][0],&score[j],sizeof(int));
+			}
 		}
 		//La banque complète sa main
 		b = jouerBanque(b,&cpt);
@@ -136,26 +138,26 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		//envoi mise aux joueurs
 		print("envoi des gains aux joueurs\n");
 		for(j = 0; j < jeu.nbJoueur; j++) {
-			write(ecriture[j][1],&mise[j],sizeof(int));
+			if(continuer[j])write(ecriture[j][1],&mise[j],sizeof(int));
 		}
 		
 		//transfert ses resultats de partie
 		print("envoi des resultats de la partie (score banque etc...)\n");
 		for(j = 0; j < jeu.nbJoueur; j++){
-			write(ecriture[j][1],&b.main,sizeof(Main));
-			write(ecriture[j][1],&b.score,sizeof(int));
-			
+			if(continuer[j]){
+				write(ecriture[j][1],&b.main,sizeof(Main));
+				write(ecriture[j][1],&b.score,sizeof(int));
+			}
 		}
 		
 		print("cartes utilisés mis en défausse\n");
 		discardAll(&b.d);
 		
-		/*for(j = 0;j < jeu.nbJoueur; j++){
+		fin = 0;
+		for(j = 0;j < jeu.nbJoueur; j++){
 			read(lecture[j][0],&continuer[j],sizeof(int));
-			if(continuer[j] == 1)
-				decaleTableauPipe(ecriture,lecture,j,jeu.nbJoueur);
-			jeu.nbJoueur--;
-		}*/
+			fin += continuer[j];
+		}
 	}
 	
 	//il y a un problème de pointeur quand l'on souhaite libérer la mémoire d'un deck
