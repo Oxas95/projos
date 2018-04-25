@@ -146,7 +146,7 @@ void action_banque(int(*ecriture)[2],int(*lecture)[2],Plateau jeu){
 		
 		fin = 0;
 		for(j = 0;j < jeu.nbJoueur; j++){
-			read(lecture[j][0],&continuer[j],sizeof(int));
+			if(continuer[j])read(lecture[j][0],&continuer[j],sizeof(int));
 			fin += continuer[j];
 		}
 	}
