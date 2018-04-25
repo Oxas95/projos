@@ -27,7 +27,7 @@ int prendreCarteDeck(deck_t *d){
 		remplirDeck(d);
 		shuffleDeck(d);
 	}
-	if(getDrawPileSize(d) == 0) exit(10);
+	if(getDrawPileSize(d) == 0) print("pas assez de cartes\n"),exit(10);
 	return drawCard(d);
 }
 
