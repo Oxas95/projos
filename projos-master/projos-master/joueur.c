@@ -49,7 +49,7 @@ void action_joueurs(Joueur j, int ecriture[2], int lecture[2], int nbMains){
 			ecrire_fichier(j,banque,totalBanque); //mettre les infos de la banque
 			j.score = 0; cpt = 0;
 			
-			if ( j.nbJetons == 0 || j.nbJetons > j.objJetons )
+			if ( j.nbJetons == 0 || j.nbJetons >= j.objJetons )
 				continuer = 0;
 			if(continuer)print("envoie continuer\n");
 			else print("envoie ne pas continuer\n");
